@@ -4,6 +4,7 @@
 #include <chrono>
 #include <numeric>
 #include <random>
+#include <unordered_map>
 
 constexpr unsigned int SudokuX = 9;
 constexpr unsigned int SudokuY = 9;
@@ -341,11 +342,6 @@ void FilterSudoku() {
 
 }
 
-bool CheckFullSudoku()
-{
-    return false;
-}
-
 bool CheckSudoku()
 {
     for (int i = 0; i < SudokuX; i++)
@@ -380,6 +376,54 @@ bool CheckSudoku()
         }
     }
     return true;
+}
+
+template<typename T>
+void FilterTwoVectors(std::vector<T>& vec1, std::vector<T>& vec2, const int numberToCheck)
+{
+
+}
+
+std::vector<unsigned> ColumnMatch(const unsigned _columnX, const unsigned _columnY)
+{
+    std::unordered_map<unsigned, unsigned> numberCounting;
+    std::unordered_map<unsigned, std::vector<std::pair<unsigned , unsigned>>> elemWithColumn;
+    unsigned numberOfColumnsToCount = 2;
+    unsigned columnStartX = _columnX / ColumnsVertical;
+    unsigned columnStartY = _columnY / ColumnsHorizontal;
+    for (unsigned row = columnStartX * ColumnsHorizontal; row < columnStartX * ColumnsHorizontal + ColumnsHorizontal; row ++)
+    {
+        for (unsigned column = columnStartY * ColumnsVertical; column < columnStartY * ColumnsVertical + ColumnsVertical; column++)
+        {
+            for (const auto& num : PossibleNumbers[row][column])
+            {
+                numberCounting[num]++;
+                if (!elemWithColumn.contains(num))
+                {
+                    elemWithColumn[num] = std::vector<std::pair<unsigned , unsigned>>();
+                }
+                elemWithColumn[num].push_back(std::pair(row, column));
+            }
+        }
+    }
+
+    for (auto it = numberCounting.begin(); it != numberCounting.end(); it++)
+    {
+        std::cout << "Number: " << it->first << " counting" << it->second << std::endl;
+    }
+
+    for (auto it : elemWithColumn)
+    {
+        std::cout << "Number: " << it.first <<  std::endl;
+        for (auto it2 : it.second)
+        {
+            std::cout << "[" << it2.first << "," << it2.second << "]" << std::endl;
+        }
+    }
+
+
+
+    return std::vector<unsigned >();
 }
 
 #define Recursive
@@ -458,8 +502,10 @@ void PrintPossibleNumbers()
 int main() {
     LoadFile("sudoku.txt");
     FilterSudoku();
-    PrintSudoku();
+   // PrintSudoku();
 //    PrintPossibleNumbers();
 //    if (usedNumbers == SudokuX * SudokuY)
 //        PrintSudoku();
+
+    ColumnMatch(0,0);
 }
