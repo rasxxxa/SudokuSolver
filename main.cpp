@@ -500,7 +500,7 @@ void PrintPossibleNumbers()
 #endif
 
 int main() {
-    LoadFile("sudoku.txt");
+    LoadFile("../sudoku.txt");
     FilterSudoku();
    // PrintSudoku();
 //    PrintPossibleNumbers();
